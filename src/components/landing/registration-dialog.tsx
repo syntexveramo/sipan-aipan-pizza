@@ -133,7 +133,6 @@ export function RegistrationDialog() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent
-        showCloseButton
         className="max-w-[560px] gap-0 overflow-hidden rounded-3xl border-[var(--content-card-border)] bg-card p-0 sm:max-w-[560px]"
       >
         <div className="h-1.5 w-full bg-muted">
