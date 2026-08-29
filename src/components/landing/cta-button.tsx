@@ -25,8 +25,8 @@ export function PrimaryCta({
         track("event_cta_click", { position });
         openRegistration(position);
       }}
-      whileHover={reduce ? undefined : { y: -2, scale: 1.015 }}
-      whileTap={reduce ? undefined : { scale: 0.98 }}
+      whileHover={reduce ? {} : { y: -2, scale: 1.015 }}
+      whileTap={reduce ? {} : { scale: 0.98 }}
       transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
       className={cn(
         "transition-soft relative inline-flex h-[52px] items-center justify-center overflow-hidden rounded-full px-8 text-base font-bold tracking-wide",
