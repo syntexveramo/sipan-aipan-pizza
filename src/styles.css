@@ -54,6 +54,8 @@
   --color-ring-offset-background: var(--background);
   --color-surface-dark: var(--surface-dark);
   --color-surface-dark-foreground: var(--surface-dark-foreground);
+  --color-surface-dark-card: var(--surface-dark-card);
+  --color-surface-dark-border: var(--surface-dark-border);
   --color-surface-warm: var(--surface-warm);
   --color-chart-1: var(--chart-1);
   --color-chart-2: var(--chart-2);
@@ -74,6 +76,10 @@
   /* --- Camada 1: primitivos --- */
   --oven-950: oklch(0.1491 0.0021 106.65);
   --oven-900: oklch(0.1867 0.0061 91.66);
+  /* Tons escuros suavizados (carvão quente, nada de preto puro) */
+  --ember-800: oklch(0.2645 0.0138 62);
+  --ember-750: oklch(0.3045 0.0152 62);
+  --ember-700: oklch(0.3465 0.0162 64);
   --flour-50: oklch(0.945 0.0221 74.09);
   --flour-100: oklch(0.9723 0.0136 78.26);
   --flour-200: oklch(0.9007 0.0297 75.67);
@@ -113,8 +119,10 @@
   --border-strong: oklch(0.1491 0.0021 106.65 / 32%);
   --input: oklch(0.1491 0.0021 106.65 / 24%);
   --ring: var(--sipan-900);
-  --surface-dark: var(--oven-950);
+  --surface-dark: var(--ember-800);
   --surface-dark-foreground: var(--flour-50);
+  --surface-dark-card: var(--ember-750);
+  --surface-dark-border: oklch(1 0 0 / 12%);
   --surface-warm: var(--flour-200);
 
   --chart-1: var(--tomato-600);
@@ -144,7 +152,7 @@
   --field-fg: var(--foreground);
   --field-placeholder: var(--muted-foreground);
   --field-error: var(--destructive);
-  --strip-bg: var(--oven-900);
+  --strip-bg: var(--ember-750);
   --strip-fg: var(--flour-50);
   --strip-accent: var(--accent);
   --badge-bg: var(--accent);
@@ -153,20 +161,20 @@
 }
 
 .dark {
-  --background: var(--oven-950);
+  --background: var(--ember-800);
   --foreground: var(--flour-50);
-  --card: var(--oven-900);
+  --card: var(--ember-750);
   --card-foreground: var(--flour-50);
-  --popover: var(--oven-900);
+  --popover: var(--ember-750);
   --popover-foreground: var(--flour-50);
-  --muted: var(--oven-900);
+  --muted: var(--ember-750);
   --muted-foreground: oklch(0.78 0.02 80);
   --border: oklch(1 0 0 / 14%);
   --border-strong: oklch(1 0 0 / 34%);
   --input: oklch(1 0 0 / 24%);
   --ring: var(--flame-400);
   --card-foreground: var(--flour-50);
-  --field-bg: var(--oven-900);
+  --field-bg: var(--ember-700);
   --field-fg: var(--flour-50);
   --btn-secondary-fg: var(--flour-50);
   --content-card-border: oklch(1 0 0 / 24%);
@@ -302,4 +310,57 @@
 @utility brush-underline {
   position: relative;
   display: inline-block;
+}
+
+/* --- Movimento e superfícies suaves --- */
+:root {
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out-soft: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-fast: 180ms;
+  --dur-base: 320ms;
+  --dur-slow: 620ms;
+  --shadow-soft: 0 1px 2px oklch(0.1491 0.0021 106.65 / 6%), 0 12px 32px -12px oklch(0.1491 0.0021 106.65 / 18%);
+  --shadow-lift: 0 2px 4px oklch(0.1491 0.0021 106.65 / 8%), 0 24px 48px -16px oklch(0.1491 0.0021 106.65 / 26%);
+  --shadow-glow: 0 18px 44px -18px oklch(0.5409 0.1997 29 / 55%);
+}
+
+@utility transition-soft {
+  transition-property: color, background-color, border-color, box-shadow, transform, opacity, filter;
+  transition-duration: var(--dur-base);
+  transition-timing-function: var(--ease-out-soft);
+}
+
+@utility card-soft {
+  border-radius: calc(var(--radius) + 6px);
+  border: 1px solid var(--content-card-border);
+  background-color: var(--card);
+  box-shadow: var(--shadow-soft);
+  transition:
+    transform var(--dur-base) var(--ease-out-soft),
+    box-shadow var(--dur-base) var(--ease-out-soft),
+    border-color var(--dur-base) var(--ease-out-soft);
+}
+
+@utility card-soft-dark {
+  border-radius: calc(var(--radius) + 6px);
+  border: 1px solid var(--surface-dark-border);
+  background-color: var(--surface-dark-card);
+  box-shadow: 0 24px 60px -30px oklch(0 0 0 / 60%);
+  transition:
+    transform var(--dur-base) var(--ease-out-soft),
+    box-shadow var(--dur-base) var(--ease-out-soft),
+    border-color var(--dur-base) var(--ease-out-soft);
+}
+
+@utility hover-lift {
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lift);
+  }
+}
+
+@utility text-gradient-heat {
+  background-image: linear-gradient(100deg, var(--accent), var(--primary) 70%);
+  background-clip: text;
+  color: transparent;
 }
