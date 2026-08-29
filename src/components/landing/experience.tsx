@@ -1,5 +1,8 @@
 import { Flame, ScrollText, UtensilsCrossed } from "lucide-react";
+import { motion } from "motion/react";
+
 import { EXPERIENCE_ITEMS } from "@/config/event";
+import { Reveal, staggerChild, StaggerGroup } from "./reveal";
 
 const icons = {
   tecnicas: ScrollText,
@@ -11,17 +14,20 @@ export function Experience() {
   return (
     <section id="experiencia" className="section-y" aria-labelledby="experiencia-titulo">
       <div className="container-page">
-        <h2 id="experiencia-titulo" className="text-h2 uppercase">
-          Da massa ao forno, uma experiência completa
-        </h2>
+        <Reveal>
+          <h2 id="experiencia-titulo" className="text-h2 uppercase">
+            Da massa ao forno, uma experiência completa
+          </h2>
+        </Reveal>
 
-        <ul className="mt-8 grid gap-8 md:mt-12 md:grid-cols-3 md:gap-6">
+        <StaggerGroup as="ul" className="mt-8 grid gap-5 md:mt-12 md:grid-cols-3">
           {EXPERIENCE_ITEMS.map((item, index) => {
             const Icon = icons[item.key];
             return (
-              <li
+              <motion.li
                 key={item.key}
-                className="border-t border-border-strong pt-5 md:border-t-0 md:border-l md:pt-0 md:pl-6 md:first:border-l-0 md:first:pl-0"
+                variants={staggerChild}
+                className="card-soft hover-lift p-6 md:p-7"
               >
                 <div className="flex items-center gap-3">
                   <Icon aria-hidden="true" strokeWidth={1.5} className="size-7 text-primary" />
@@ -31,10 +37,10 @@ export function Experience() {
                 </div>
                 <h3 className="text-h3 mt-4 uppercase">{item.title}</h3>
                 <p className="text-muted-foreground mt-2">{item.text}</p>
-              </li>
+              </motion.li>
             );
           })}
-        </ul>
+        </StaggerGroup>
       </div>
     </section>
   );
