@@ -1,19 +1,12 @@
 import { Loader2 } from "lucide-react";
+import { motion, useReducedMotion } from "motion/react";
 import { cn } from "@/lib/utils";
 import { track } from "@/lib/analytics";
+import { openRegistration } from "@/lib/registration-modal";
 
 export const FORM_ANCHOR_ID = "inscricao";
 
-export function scrollToForm() {
-  const el = document.getElementById(FORM_ANCHOR_ID);
-  if (!el) return;
-  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  el.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
-  const firstField = el.querySelector<HTMLElement>("input, select, textarea");
-  window.setTimeout(() => firstField?.focus({ preventScroll: true }), reduce ? 0 : 500);
-}
-
-type Position = "hero" | "sticky" | "final";
+type Position = "hero" | "sticky" | "final" | "info";
 
 export function PrimaryCta({
   position,
@@ -24,22 +17,30 @@ export function PrimaryCta({
   className?: string;
   children?: React.ReactNode;
 }) {
+  const reduce = useReducedMotion();
   return (
-    <button
+    <motion.button
       type="button"
       onClick={() => {
         track("event_cta_click", { position });
-        scrollToForm();
+        openRegistration(position);
       }}
+      whileHover={reduce ? undefined : { y: -2, scale: 1.015 }}
+      whileTap={reduce ? undefined : { scale: 0.98 }}
+      transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
       className={cn(
-        "inline-flex h-[50px] items-center justify-center rounded-full px-8 text-base font-bold tracking-wide",
-        "bg-primary text-primary-foreground transition-colors hover:bg-primary-hover active:bg-primary-active",
-        "md:h-[52px]",
+        "transition-soft relative inline-flex h-[52px] items-center justify-center overflow-hidden rounded-full px-8 text-base font-bold tracking-wide",
+        "bg-primary text-primary-foreground hover:bg-primary-hover active:bg-primary-active",
+        "shadow-[var(--shadow-soft)] hover:shadow-[var(--shadow-glow)] md:h-[56px]",
         className,
       )}
     >
-      {children}
-    </button>
+      <span className="relative z-10">{children}</span>
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 -translate-x-full bg-[linear-gradient(100deg,transparent,oklch(1_0_0/35%),transparent)] transition-transform duration-700 ease-[var(--ease-out-soft)] hover:translate-x-full"
+      />
+    </motion.button>
   );
 }
 
@@ -61,8 +62,8 @@ export function SecondaryCta({
       rel="noopener noreferrer"
       onClick={onClick}
       className={cn(
-        "inline-flex h-[50px] items-center justify-center gap-2 rounded-full border border-border-strong px-7",
-        "text-base font-semibold text-foreground transition-colors hover:bg-muted md:h-[52px]",
+        "transition-soft inline-flex h-[52px] items-center justify-center gap-2 rounded-full border border-border-strong px-7",
+        "text-base font-semibold text-foreground hover:-translate-y-0.5 hover:bg-muted md:h-[56px]",
         className,
       )}
     >
@@ -83,9 +84,9 @@ export function SubmitButton({
       type="submit"
       disabled={isSubmitting}
       className={cn(
-        "inline-flex h-[50px] w-full items-center justify-center gap-2 rounded-full px-8 text-base font-bold",
-        "bg-primary text-primary-foreground transition-colors hover:bg-primary-hover active:bg-primary-active",
-        "disabled:opacity-50 md:h-[52px] sm:w-auto",
+        "transition-soft inline-flex h-[52px] w-full items-center justify-center gap-2 rounded-full px-8 text-base font-bold",
+        "bg-primary text-primary-foreground hover:bg-primary-hover active:bg-primary-active",
+        "disabled:opacity-50 sm:w-auto md:h-[56px]",
         className,
       )}
     >
