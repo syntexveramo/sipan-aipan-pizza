@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
+import { AnimatePresence, motion } from "motion/react";
 
 import { EVENT } from "@/config/event";
 import { Hero } from "@/components/landing/hero";
@@ -7,11 +8,12 @@ import { Experience } from "@/components/landing/experience";
 import { ChefSection } from "@/components/landing/chef-section";
 import { EventInfo } from "@/components/landing/event-info";
 import { Audience } from "@/components/landing/audience";
-import { RegistrationForm } from "@/components/landing/registration-form";
 import { FaqSection } from "@/components/landing/faq-section";
 import { FinalCta } from "@/components/landing/final-cta";
 import { SiteFooter } from "@/components/landing/site-footer";
 import { PrimaryCta } from "@/components/landing/cta-button";
+import { RegistrationDialog } from "@/components/landing/registration-dialog";
+import { openRegistration } from "@/lib/registration-modal";
 
 const TITLE = "Pizza Napoletana ao Vivo | Aula-show SIPAN AIPAN ABC";
 const DESCRIPTION =
@@ -105,12 +107,13 @@ function LandingPage() {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <a
-        href="#inscricao"
+      <button
+        type="button"
+        onClick={() => openRegistration("skip-link")}
         className="sr-only focus:not-sr-only focus:absolute focus:top-3 focus:left-3 focus:z-50 focus:rounded-full focus:bg-primary focus:px-5 focus:py-3 focus:text-primary-foreground"
       >
         Ir para a inscrição
-      </a>
+      </button>
 
       <Hero ctaRef={heroCtaRef} />
 
@@ -119,20 +122,27 @@ function LandingPage() {
         <ChefSection />
         <EventInfo />
         <Audience />
-        <RegistrationForm />
         <FaqSection />
         <FinalCta />
       </main>
 
       <SiteFooter />
 
-      <div
-        className={`fixed inset-x-0 bottom-0 z-40 border-t border-border bg-background/95 p-3 backdrop-blur transition-transform md:hidden ${
-          showSticky ? "translate-y-0" : "translate-y-full"
-        }`}
-      >
-        <PrimaryCta position="sticky" className="w-full" />
-      </div>
+      <RegistrationDialog />
+
+      <AnimatePresence>
+        {showSticky ? (
+          <motion.div
+            initial={{ y: 96, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: 96, opacity: 0 }}
+            transition={{ duration: 0.36, ease: [0.22, 1, 0.36, 1] }}
+            className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-background/90 p-3 backdrop-blur-md md:hidden"
+          >
+            <PrimaryCta position="sticky" className="w-full" />
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
     </div>
   );
 }
